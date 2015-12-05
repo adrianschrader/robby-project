@@ -9,6 +9,6 @@ Eine volle Spezifikation der Projektziele ist dem Lastenheft in [requirements.pd
 
 A simple scenario inspired by Karel The Robot and modified by Thomas Kempe & David Tepaße
 
-In diesem Szenario können verschiedene Roboter (Unterklassen von Roboter) erzeugt werden.
+In diesem Szenario können verschiedene Roboter (Unterklassen von Roboter) erzeugt werden.
 Mit Hilfe einiger Sensoren knnen diese Roboter auch komplexe Aufgaben erledigen.
-Die Roboter können zudem Akkus aufnehmen und Schrauben ablegen.
+Die Roboter können zudem Akkus aufnehmen und Schrauben ablegen.
