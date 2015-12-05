@@ -23,7 +23,7 @@ public class Robby extends Roboter
      */
     public boolean akkuVorne()
     {
-       return istObjektNebendran(0, Akku.class);
+       return this.istObjektNebendran(0, Akku.class);
     }
 
     /**
@@ -32,7 +32,7 @@ public class Robby extends Roboter
      */
     public boolean akkuRechts()
     {
-        return istObjektNebendran(90, Akku.class);
+        return this.istObjektNebendran(90, Akku.class);
     }
 
     /**
@@ -41,7 +41,7 @@ public class Robby extends Roboter
      */
     public boolean akkuLinks()
     {
-        return istObjektNebendran(-90, Akku.class);
+        return this.istObjektNebendran(-90, Akku.class);
     }
 
     /**
@@ -51,13 +51,14 @@ public class Robby extends Roboter
      */
     public boolean wandHinten()
     {
-        return istObjektNebendran(180, Wand.class);
+        return this.istObjektNebendran(180, Wand.class);
     }
 
     /**
-     * Der Sensor überprüft, ob sich neben Robby ein anderes Object befindet. 
+     * Der Sensor überprüft, ob sich neben Robby ein anderes Object befindet.
      * @params angle Winkel von der Horizontalen in dessen Richtung gesucht werden soll. Der Winkel wird in ganzzahligen Vielfachen von 90° angegeben.
      * @params object Klasse des gesuchten Actors als Erasure
+     * @return boolean
      */
     public boolean istObjektNebendran(int angle, Class<?> object) {
        double phi = (this.getRotation() + angle) / 180.0 * Math.PI;
