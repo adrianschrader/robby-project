@@ -60,7 +60,7 @@ public class Robby extends Roboter
      * @params object Klasse des gesuchten Actors als Erasure
      * @return boolean
      */
-    public boolean istObjektNebendran(int angle, Class<?> object) {
+    private boolean istObjektNebendran(int angle, Class<?> object) {
        double phi = (this.getRotation() + angle) / 180.0 * Math.PI;
 
        if (this.getOneObjectAtOffset((int)Math.cos(phi), (int)Math.sin(phi), object) != null)
