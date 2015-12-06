@@ -55,20 +55,15 @@ public class Robby extends Roboter
     }
 
     /**
-     * Der Sensor überprüft, ob sich neben Robby ein anderes Object befindet.
-     * @params angle Winkel von der Horizontalen in dessen Richtung gesucht werden soll. Der Winkel wird in ganzzahligen Vielfachen von 90° angegeben.
+     * Der Sensor überprüft, ob sich neben der Laufrichtung von Robby ein anderer Actor befindet.
+     * @params angle Winkel von der Laufrichtung zum nebenliegenden Feld auf dem gesucht werden soll. 
      * @params object Klasse des gesuchten Actors als Erasure
      * @return boolean
      */
     private boolean istObjektNebendran(int angle, Class<?> object) {
        double phi = (this.getRotation() + angle) / 180.0 * Math.PI;
 
-       if (this.getOneObjectAtOffset((int)Math.cos(phi), (int)Math.sin(phi), object) != null)
-       {
-          return true;
-       }
-
-       return false;
+       return (this.getOneObjectAtOffset((int)Math.cos(phi), (int)Math.sin(phi), object) != null);
     }
 
 }
