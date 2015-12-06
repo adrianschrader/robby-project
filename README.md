@@ -2,6 +2,13 @@
 
 Dieses Project soll die Funktionalität eines existierenden Roboterszenarios erweitern. Der Roboter "Robby" soll Wände in seiner Umgebung aufspüren können, sich seinen maximalen Akkufüllstand merken können und zusammenhängende Hindernisse komplett umlaufen können.
 
+### Installation
+Zum Entwickeln wird das [Greenfoot SDK](http://www.greenfoot.org/download) benötigt. Das Projektfile muss jedoch für jede Installation kopiert werden. 
+
+``` bash
+  cp project.example.greenfoot project.greenfoot
+```
+
 ### Projektvorgaben und Lastenheft
 Eine volle Spezifikation der Projektziele ist dem Lastenheft in [requirements.pdf]() zu entnehmen.
 
