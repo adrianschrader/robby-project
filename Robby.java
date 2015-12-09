@@ -18,7 +18,8 @@ public class Robby extends Roboter
     }
 
     /**
-     * Der Sensor ueberprueft, ob sich in Laufrichtung des Roboters ein Akku befindet.
+     * Der Sensor ueberprueft, ob sich in Laufrichtung des Roboters
+     * ein Akku befindet.
      * @return boolean
      */
     public boolean akkuVorne()
@@ -27,7 +28,8 @@ public class Robby extends Roboter
     }
 
     /**
-     * Der Sensor ueberprueft, ob sich rechts der Laufrichtung des Roboters ein Akku befindet.
+     * Der Sensor ueberprueft, ob sich rechts der Laufrichtung des Roboters
+     * ein Akku befindet.
      * @return boolean
      */
     public boolean akkuRechts()
@@ -36,7 +38,8 @@ public class Robby extends Roboter
     }
 
     /**
-     * Der Sensor ueberprueft, ob sich links der Laufrichtung des Roboters ein Akku befindet.
+     * Der Sensor ueberprueft, ob sich links der Laufrichtung des Roboters
+     * ein Akku befindet.
      * @return boolean
      */
     public boolean akkuLinks()
@@ -55,8 +58,9 @@ public class Robby extends Roboter
     }
 
     /**
-     * Der Sensor überprüft, ob sich neben der Laufrichtung von Robby ein anderer Actor befindet.
-     * @params angle Winkel von der Laufrichtung zum nebenliegenden Feld auf dem gesucht werden soll. 
+     * Der Sensor überprüft, ob sich neben der Laufrichtung von Robby ein
+     * anderer Actor befindet.
+     * @params angle Winkel von der Laufrichtung zum nebenliegenden Feld auf dem gesucht werden soll.
      * @params object Klasse des gesuchten Actors als Erasure
      * @return boolean
      */
