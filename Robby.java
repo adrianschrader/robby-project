@@ -7,6 +7,15 @@ import greenfoot.*; // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 public class Robby extends Roboter
 {
+
+    /**
+     *
+     */
+    public Robby()
+    {
+
+    }
+
     /**
      * In der Methode "act" koennen Befehle / andere Methoden angewendet werden:
      * Die Methoden werden dort nacheinander "aufgerufen", wenn man
@@ -20,7 +29,6 @@ public class Robby extends Roboter
     /**
      * Der Sensor ueberprueft, ob sich in Laufrichtung des Roboters
      * ein Akku befindet.
-     * @return boolean
      */
     public boolean akkuVorne()
     {
@@ -30,7 +38,6 @@ public class Robby extends Roboter
     /**
      * Der Sensor ueberprueft, ob sich rechts der Laufrichtung des Roboters
      * ein Akku befindet.
-     * @return boolean
      */
     public boolean akkuRechts()
     {
@@ -40,7 +47,6 @@ public class Robby extends Roboter
     /**
      * Der Sensor ueberprueft, ob sich links der Laufrichtung des Roboters
      * ein Akku befindet.
-     * @return boolean
      */
     public boolean akkuLinks()
     {
@@ -50,7 +56,6 @@ public class Robby extends Roboter
     /**
      * Der Sensor ueberprueft, ob sich entgegen der Laufrichtung des Roboters
      * eine Wand befindet.
-     * @return boolean
      */
     public boolean wandHinten()
     {
@@ -60,14 +65,17 @@ public class Robby extends Roboter
     /**
      * Der Sensor überprüft, ob sich neben der Laufrichtung von Robby ein
      * anderer Actor befindet.
-     * @params angle Winkel von der Laufrichtung zum nebenliegenden Feld auf dem gesucht werden soll.
-     * @params object Klasse des gesuchten Actors als Erasure
-     * @return boolean
+     * @param direction Winkel von der Laufrichtung zum Suchfeld.
+     * @param class Klasse des gesuchten Actors
+     * @return boolean gibt an, ob das Objekt mit den angegeben Eigenschaften existiert
      */
-    private boolean istObjektNebendran(int angle, Class<?> object) {
-       double phi = (this.getRotation() + angle) / 180.0 * Math.PI;
+    public boolean istObjektNebendran(int direction, Class<?> cl)
+    {
+       double angle = (this.getRotation() + direction) / 180.0 * Math.PI;
 
-       return (this.getOneObjectAtOffset((int)Math.cos(phi), (int)Math.sin(phi), object) != null);
+       return (this.getOneObjectAtOffset(
+              (int)Math.cos(angle),
+              (int)Math.sin(angle), cl) != null);
     }
 
 }
