@@ -52,6 +52,15 @@ public class Robby extends Roboter
     {
         return this.istObjektNebendran(-90, Akku.class);
     }
+    
+    /**
+     * Der Sensor ueberprueft, ob sich links der Laufrichtung des Roboters
+     * ein Akku befindet.
+     */
+    public boolean akkuHinten()
+    {
+        return this.istObjektNebendran(180, Akku.class);
+    }
 
     /**
      * Der Sensor ueberprueft, ob sich entgegen der Laufrichtung des Roboters
@@ -66,8 +75,13 @@ public class Robby extends Roboter
      * Der Sensor überprüft, ob sich neben der Laufrichtung von Robby ein
      * anderer Actor befindet.
      * @param direction Winkel von der Laufrichtung zum Suchfeld.
-     * @param class Klasse des gesuchten Actors
-     * @return boolean gibt an, ob das Objekt mit den angegeben Eigenschaften existiert
+     * @param cl Klasse des gesuchten Actors
+     * @return boolean Gibt an, ob das Objekt mit den angegeben Eigenschaften existiert
+     * @see #akkuVorne
+     * @see #akkuRechts
+     * @see #akkuLinks
+     * @see #akkuHinten
+     * @see #wandHinten
      */
     public boolean istObjektNebendran(int direction, Class<?> cl)
     {
