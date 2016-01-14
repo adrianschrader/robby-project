@@ -52,7 +52,7 @@ public class Robby extends Roboter
     {
         return this.istObjektNebendran(-90, Akku.class);
     }
-    
+
     /**
      * Der Sensor ueberprueft, ob sich links der Laufrichtung des Roboters
      * ein Akku befindet.

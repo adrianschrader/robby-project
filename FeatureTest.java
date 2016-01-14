@@ -69,14 +69,29 @@ public class FeatureTest<T> {
     }
 
     /**
-     * Gibt die Statusmeldung für eine überprüfte Methode aus.
-     * @see #testMethod
+     * Gibt die Statusmeldungen für einzelne Tests aus
      */
-    protected void sendStatus(String method, boolean passed, boolean newline) {
-        System.out.print("[" + (passed ? this.MESSAGE_PASSED : this.MESSAGE_FAILED) + "] " + method + "() wird getestet...");
+    protected void sendStatus(String message, boolean passed) {
+        System.out.println("[" + (passed ? this.MESSAGE_PASSED : this.MESSAGE_FAILED) + "] " + message);
+    }
 
-        if (newline)
-            System.out.println();
+    /**
+     * Überprüft, ob das reflexive Feld der Klasse einem Sollwert entspricht.
+     * @param name Name des Fields
+     * @param target Sollwert für das angegebene Feld
+     * @return Gibt an, ob der Sollwert mit dem Feldwert übereinstimmt
+     * @see testMethod
+     */
+    protected boolean testField(String name, Object target) {
+        try {
+            return cl.getField(name).get(this.object) == target;
+        } catch (Exception ex) {
+            this.sendStatus(name, false);
+            failed = true;
+
+            System.err.println("Fehlerhaftes Testskript (testMethod): Feld in " + cl.getName() + " konnte nicht geladen werden. (Nachricht: " + ex.getMessage() + ")");
+            return false;
+        }
     }
 
     /**
@@ -111,20 +126,18 @@ public class FeatureTest<T> {
 
             if (!method.invoke(this.object, parameters).equals(returnValue))
             {
-                this.sendStatus(method.getName(), false, true);
                 failed = true;
                 return false;
             }
 
-            this.sendStatus(method.getName(), true, true);
             return true;
         }
         catch (Exception ex)
         {
-            this.sendStatus(name, false, true);
+            this.sendStatus(name, false);
             failed = true;
 
-            System.err.println("Methode in " + cl.getName() + " konnte nicht geladen werden. (Nachricht: " + ex.getMessage() + ")");
+            System.err.println("Fehlerhaftes Testskript (testMethod): Methode in " + cl.getName() + " konnte nicht geladen werden. (Nachricht: " + ex.getMessage() + ")");
             return false;
         }
     }
