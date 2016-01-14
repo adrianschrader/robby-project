@@ -42,12 +42,44 @@ void HindernisUmrunden()
                     {
                         if(WandLinks)   // wenn auch vorbe eine Wand steht, sogar um 180 grad, und so wieder aus der Sackgasse herauslaufen.
                         {
-                            dreheRechts();  // Drehung um 180 Grad
-                            dreheRechts();
+                            if(WandHinten())
+                            {
+                                dreheRechts();  // Drehung um 180 Grad
+                                dreheRechts();
+                                bewegen();                      // nach dem Bewegen muss die Variable moved auf true gesetzt werden und je nach laufrichtung müssen auch die counter für die Richtung erhöht oder gesenkt werden.
+                                moved = true;
+                                int Blick = this.getRotation();
+                                switch(Blick)
+                                {
+                                    case 0  : count_lr ++ ;     // Blickrichtung nach Rechts
+                                        break;
+                                    case 90  : count_ud ++ ;    // Blickrichtung nach Oben
+                                        break;
+                                    case 180 : count_lr -- ;    // Blickrichtung nach Links
+                                        break;
+                                    case 270 : count_ud -- ;    // Blickrichtung nach Unten
+                                        break;
+                                }
+                                
+                            }
                         }
                         else
                         {
                             dreheLinks      // Wenn Links keine Wand ist, genügt die Drehung um 90 Grad.
+                            bewegen();                      // nach dem Bewegen muss die Variable moved auf true gesetzt werden und je nach laufrichtung müssen auch die counter für die Richtung erhöht oder gesenkt werden.
+                            moved = true;
+                            int Blick = this.getRotation();
+                            switch(Blick)
+                            {
+                                case 0  : count_lr ++ ;     // Blickrichtung nach Rechts
+                                        break;
+                                case 90  : count_ud ++ ;    // Blickrichtung nach Oben
+                                        break;
+                                case 180 : count_lr -- ;    // Blickrichtung nach Links
+                                        break;
+                                case 270 : count_ud -- ;    // Blickrichtung nach Unten
+                                        break;
+                            }
                         }
                     }
                     else
