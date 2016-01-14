@@ -13,7 +13,7 @@ public class Robby extends Roboter
      */
     public Robby()
     {
-        
+
         }
 
     /**
@@ -26,30 +26,31 @@ public class Robby extends Roboter
 
     }
 
-void HindernisUmrunden()
+    public void HindernisUmrunden()
         {
-            boolean moved = false;  //zeichnet Bewegung von Robby auf
+            boolean moved = false;  // zeichnet Bewegung von Robby auf
             int count_ud = 0;       // Vertikalbewegung
             int count_lr = 0;       // Horizontalbewegung
-            
+
             dreheLinks();           // Da Robby anfangs zum Hindernis Blickt, muss er sich erst in Marschrichtung drehen.
-            
+
             while(!(moved && count_ud == 0 && count_lr == 0))
             {
-                if(WandRechts)          // erst wenn rechts eine Wand steht, muss überprüft werden, ob aich vorne eine Wand steht, andernfalls kann gleich nach rechts gegangen werden.
+                if(wandRechts())          // erst wenn rechts eine Wand steht, muss überprüft werden, ob aich vorne eine Wand steht, andernfalls kann gleich nach rechts gegangen werden.
                 {
-                    if(WandVorne)       // wenn jedoch auch vorne eine wand steht, muss sich Robby um mindestens 90 grad drehen,
+                    if(wandVorne())       // wenn jedoch auch vorne eine wand steht, muss sich Robby um mindestens 90 grad drehen,
                     {
-                        if(WandLinks)   // wenn auch vorbe eine Wand steht, sogar um 180 grad, und so wieder aus der Sackgasse herauslaufen.
+                        if(wandLinks())   // wenn auch vorbe eine Wand steht, sogar um 180 grad, und so wieder aus der Sackgasse herauslaufen.
                         {
-                            if(WandHinten())
+                            if(wandHinten())
                             {
                                 dreheRechts();  // Drehung um 180 Grad
                                 dreheRechts();
                                 bewegen();                      // nach dem Bewegen muss die Variable moved auf true gesetzt werden und je nach laufrichtung müssen auch die counter für die Richtung erhöht oder gesenkt werden.
+                                
                                 moved = true;
-                                int Blick = this.getRotation();
-                                switch(Blick)
+
+                                switch(this.getRotation())
                                 {
                                     case 0  : count_lr ++ ;     // Blickrichtung nach Rechts
                                         break;
@@ -60,12 +61,12 @@ void HindernisUmrunden()
                                     case 270 : count_ud -- ;    // Blickrichtung nach Unten
                                         break;
                                 }
-                                
+
                             }
                         }
                         else
                         {
-                            dreheLinks      // Wenn Links keine Wand ist, genügt die Drehung um 90 Grad.
+                            dreheLinks();      // Wenn Links keine Wand ist, genügt die Drehung um 90 Grad.
                             bewegen();                      // nach dem Bewegen muss die Variable moved auf true gesetzt werden und je nach laufrichtung müssen auch die counter für die Richtung erhöht oder gesenkt werden.
                             moved = true;
                             int Blick = this.getRotation();
