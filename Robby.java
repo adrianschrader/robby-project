@@ -13,7 +13,20 @@ public class Robby extends Roboter
      */
     public Robby()
     {
-        void HindernisUmrunden()
+        
+        }
+
+    /**
+     * In der Methode "act" koennen Befehle / andere Methoden angewendet werden:
+     * Die Methoden werden dort nacheinander "aufgerufen", wenn man
+     * nach dem Kompilieren / uebersetzen den Act-Knopf drueckt.
+     */
+    public void act()
+    {
+
+    }
+
+void HindernisUmrunden()
         {
             boolean moved = false;  //zeichnet Bewegung von Robby auf
             int count_ud = 0;       // Vertikalbewegung
@@ -73,17 +86,10 @@ public class Robby extends Roboter
                                 break;
                     }
                 }
-    }   
+            }
+        }
 
-    /**
-     * In der Methode "act" koennen Befehle / andere Methoden angewendet werden:
-     * Die Methoden werden dort nacheinander "aufgerufen", wenn man
-     * nach dem Kompilieren / uebersetzen den Act-Knopf drueckt.
-     */
-    public void act()
-    {
 
-    }
 
     /**
      * Der Sensor ueberprueft, ob sich in Laufrichtung des Roboters
