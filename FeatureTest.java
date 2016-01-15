@@ -76,6 +76,23 @@ public class FeatureTest<T> {
     }
 
     /**
+     * Gibt das reflexive Feld aus.
+     * @param name Name des Fields
+     * @see testField
+     */
+    protected <F> F getField(String name, Class<F> type) {
+        try {
+            return (F)(cl.getField(name).get(this.object));
+        } catch (Exception ex) {
+            this.sendStatus(name, false);
+            failed = true;
+
+            System.err.println("Fehlerhaftes Testskript (testMethod): Feld in " + cl.getName() + " konnte nicht geladen oder gecastet werden. (Nachricht: " + ex.getMessage() + ")");
+            return null;
+        }
+    }
+
+    /**
      * Überprüft, ob das reflexive Feld der Klasse einem Sollwert entspricht.
      * @param name Name des Fields
      * @param target Sollwert für das angegebene Feld
@@ -115,7 +132,7 @@ public class FeatureTest<T> {
      * @param returnValue Object, dass dem Rückgabewert entsprechen soll
      * @return Gibt an, ob die Methode den Test bestanden hat
      */
-    protected boolean testMethod(String name, Object returnValue, Object[] parameters) {
+    protected boolean testMethod(String name, Object expectedValue, Object[] parameters) {
         Class<?>[] parameterTypes = new Class<?>[parameters.length];
         for (int index = 0; index < parameters.length; index++) {
             parameterTypes[index] = parameters[index].getClass();
@@ -123,11 +140,14 @@ public class FeatureTest<T> {
 
         try {
             Method method = this.cl.getMethod(name, parameterTypes);
-
-            if (!method.invoke(this.object, parameters).equals(returnValue))
-            {
-                failed = true;
-                return false;
+            Object returnValue = method.invoke(this.object, parameters);
+            
+            if (expectedValue != null) {
+                if (!returnValue.equals(expectedValue))
+                {
+                    failed = true;
+                    return false;
+                }
             }
 
             return true;
@@ -137,7 +157,8 @@ public class FeatureTest<T> {
             this.sendStatus(name, false);
             failed = true;
 
-            System.err.println("Fehlerhaftes Testskript (testMethod): Methode in " + cl.getName() + " konnte nicht geladen werden. (Nachricht: " + ex.getMessage() + ")");
+            System.err.println("Fehlerhaftes Testskript (testMethod): Methode in " + cl.getName() + " konnte nicht geladen werden. ");
+            ex.printStackTrace();
             return false;
         }
     }

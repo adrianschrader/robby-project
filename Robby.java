@@ -37,6 +37,19 @@ public class Robby extends Roboter
     }
 
     /**
+     * Bewegt Robby in die gewünschte, relative Richtung
+     * @param direction Relative Laufrichtung
+     */
+    public void bewegen(int direction) {
+        int newDirection = (this.getRotation() + direction) % 360;
+        if (newDirection != this.getRotation()) {
+            this.setRotation(newDirection);
+            Greenfoot.delay(1);
+        }
+        bewegen();
+    }
+
+    /**
      * Robby soll hiermit einen Akku aufnehmen und im Inventar speichern. Vor
      * der Akkuaufnahme wird auf dem Feld zunächst überprüft, ob sich hier ein
      * Akku befindet. Wenn dies der Fall ist, aber auch noch weniger als 10
@@ -44,12 +57,10 @@ public class Robby extends Roboter
      * Akkus im Inventar erreicht, meldet er dies und nimmt keinen weiteren Akku * auf. Wenn sich andernfalls auch kein Akku auf dem Feld befindet, meldet
      * er dies ebenfalls.
      */
-    public void akkuAufnehmen()
-    {
-        if((Akku)this.getOneObjectAtOffset(0, 0, Akku.class) != null)
-        {
-            if(anzahlAkkus < Robby.MAX_AKKUS)
-            {
+    public void akkuAufnehmen() {
+        Akku aktAkku = (Akku)this.getOneObjectAtOffset(0, 0, Akku.class);
+        if(aktAkku != null) {
+            if(anzahlAkkus < Robby.MAX_AKKUS) {
                 this.getWorld().removeObject(aktAkku);
                 anzahlAkkus++;
             }
@@ -68,10 +79,8 @@ public class Robby extends Roboter
      * Schrauben im Inventar wird eine abgezogen und dies abgespeichert.
      * Andernfalls meldet Robby, dass er keine Schrauben mehr hat.
      */
-    public void schraubeAblegen ()
-    {
-        if(anzahlSchrauben > 0)
-        {
+    public void schraubeAblegen() {
+        if(anzahlSchrauben > 0) {
             this.getWorld().addObject(
                 new Schraube(),
                 this.getX(),
@@ -84,8 +93,8 @@ public class Robby extends Roboter
     }
 
     public void hindernisUmrunden2() {
-        int startX = this.getX();
-        int startY = this.getY();
+        int startX = this.getX(),
+            startY = this.getY();
 
         dreheLinks();
 
@@ -99,72 +108,6 @@ public class Robby extends Roboter
             }
         } while( startX != this.getX() || startY != this.getY() );
 
-        dreheRechts();
-    }
-
-    public void bewegen(int direction) {
-        int newDirection = (this.getRotation() + direction) % 360;
-        if (newDirection != this.getRotation()) {
-            this.setRotation(newDirection);
-            Greenfoot.delay(1);
-        }
-        bewegen();
-    }
-
-    /**
-     * Umrundet ein geschlossenes Hindernis aus Wänden, bis er wieder am
-     * Ausgangspunkt angekommen ist.
-     */
-    public void hindernisUmrunden()
-    {
-        boolean moved = false;
-        int startX = this.getX();
-        int startY = this.getY();
-
-        dreheLinks(); // Da Robby anfangs zum Hindernis Blickt, muss er sich erst in Marschrichtung drehen.
-
-        while(!( moved && startX == this.getX() && startY == this.getY() ))
-        {
-            // Erst wenn rechts eine Wand steht, muss überprüft werden, ob vorne eine Wand steht, andernfalls kann gleich nach rechts gegangen werden.
-
-            if(wandRechts() || grenzeRechts())           // Erst wenn rechts eine Wand steht, muss überprüft werden, ob vorne eine Wand steht, andernfalls kann gleich nach rechts gegangen werden
-            {
-                if(wandVorne() || grenzeVorne())       // wenn jedoch auch vorne eine wand steht, muss sich Robby um mindestens 90 grad drehen,
-                {
-                    if(wandLinks() || grenzeLinks())   // wenn auch vorbe eine Wand steht, sogar um 180 grad, und so wieder aus der Sackgasse herauslaufen.
-                    {
-                        if(wandHinten())
-                        {
-                            System.out.println("Robby kann das Hindernis nicht umrunden, weil er eingemauert ist. ");
-                        } else {
-                            moved = true;
-                            dreheRechts();  // Drehung um 180 Grad
-                            dreheRechts();
-                            bewegen();
-                        }
-                    }
-                    else
-                    {
-                        moved = true;
-                        dreheLinks();      // Wenn Links keine Wand ist, genügt die Drehung um 90 Grad.
-                        bewegen();
-                    }
-                }
-                else
-                {
-                    moved = true;
-                    bewegen();
-                }
-            }
-            else
-            {
-                moved = true;
-                dreheRechts();
-                bewegen();
-            }
-        }
-
-        System.out.println("Ich habe das Hindernis erfolgreich umrundet");
         dreheRechts();
     }
 
