@@ -50,7 +50,9 @@ public class RobbyTest extends FeatureTest<Robby>
 
         // Überprüfe die Sensorfunktionen für Wände
         this.testRotationalObjectDetection("Wand-Sensoren", new String[] { "wandVorne", "wandLinks", "wandRechts", "wandHinten" }, Wand.class); 
-
+        
+        
+        
         // Räume die Spielwelt auf
         this.world.removeObject(this.object);
 
@@ -65,13 +67,17 @@ public class RobbyTest extends FeatureTest<Robby>
         // Hier sollten die Speicherfeatures abgefragt werden.
         return true;
     }
-
+    
     /**
      * Testet Robbys Fähigkeit zusammenhängende Hindernisse zu umrunden.
      */
     public boolean testMovement() {
         return true;
     }
+    
+    //private boolean testWorldBorderDetection() {
+        
+    //}
     
     private boolean testRotationalObjectDetection(String title, String[] methods, Class<? extends Actor> cl) {
         if (methods.length < 4) {

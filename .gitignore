@@ -9,6 +9,7 @@
 
 # Documentation is created dynamically
 doc/*
+__*
 
 # Project file. Continously checking it in destroys the project ocasionally (while merging etc.) because it changes completely at every compile. Instead, make a copy of the file after the first runtime and name it e.g. `project.example.greenfoot`. See http://bugs.bluej.org/greenfoot/ticket/409
 
