@@ -5,7 +5,7 @@ import java.util.*;
  * Diese Klasses testet die Funktionalität von Sensoren, Speicher und
  * Bewegungsapparat der Klasse Robby nach dem Programmstart.
  * @author Adrian Schrader
- * @version 1.0.0
+ * @version 1.5
  */
 public class RobbyTest extends FeatureTest<Robby>
 {
@@ -23,13 +23,14 @@ public class RobbyTest extends FeatureTest<Robby>
     /**
      * Gibt an, ob alle Funktionen von Robby einwandfrei funktionieren.
      */
+    @Override
     public boolean testAllFeatures() {
         System.out.println("Testprogramm für Klasse Robby einleiten...");
 
         try {
             this.world.addObject(this.object, 0, 0);
 
-            boolean success = this.testSensors() && this.testMemory();
+            boolean success = this.testSensors() && this.testMemory() && testMovement();
 
             this.world.removeObject(this.object);
             return success;
@@ -41,8 +42,9 @@ public class RobbyTest extends FeatureTest<Robby>
     }
 
     /**
-     * Testet Robbys Sensoren zum Aufspüren von Wänden und Akkus in einer Entfernung von einem Feld.
-     * @throws Exception
+     * Testet Robbys Sensoren zum Aufspüren von Wänden und Akkus in einer Entfernung von einem Feld. 
+     * @throws InstantiationException
+     * @throws IllegalAccessException
      */
     public boolean testSensors() throws InstantiationException, IllegalAccessException {
         System.out.println("Sensorfunktionalität wird getetstet...");
@@ -61,12 +63,14 @@ public class RobbyTest extends FeatureTest<Robby>
     }
 
     /**
-     * Testet Robbys Fähigkeit Schrauben abzulegen und Akkus aufzunehmen und
+     * Testet Robbys Fähigkeit Schrauben abzulegen, Akkus aufzunehmen und
      * dabei seine Statusanzeigen zu aktualisieren.
      */
     public boolean testMemory() {
         boolean success = true;
-        success &= testObjectAquisition("akkuAufnehmen", "anzahlAkkus", 0, Robby.MAX_AKKUS, 1, Akku.class);
+        System.out.println("Speicherfunktionalität wird getetstet...");
+        
+        success &= testObjectAquisition("akkuAufnehmen", "anzahlAkkus", Robby.MAX_AKKUS, Akku.class);
         this.sendStatus("Aufnahme und Begrenzung von Akkus", success);
         
         success &= testObjectDeposition("schraubeAblegen", "anzahlSchrauben", 0, Schraube.class);
@@ -75,7 +79,68 @@ public class RobbyTest extends FeatureTest<Robby>
         return success;
     }
     
-    private boolean testObjectDeposition(String method, String field, int min, Class<? extends Actor> cl) {
+    /**
+     * Testet Robbys Fähigkeit ein geschlossenes Hindernis zu Umrunden, 
+     * dabei anpassbare Aktionen auszuführen und zum Ausgangspunkt 
+     * zurückzukehren. 
+     */
+    public boolean testMovement() {
+        System.out.println("Bewegungsfunktionalität wird getetstet...");
+        this.object.setLocation(0, 1);
+        this.object.setRotation(0);
+        
+        this.world.addObject(new Wand(), 1, 1);
+        this.world.addObject(new Wand(), 2, 2);
+        this.world.addObject(new Wand(), 1, 3);
+        this.world.addObject(new Wand(), 3, 1);
+        
+        class MovementCheck implements Runnable {
+            boolean success = true;
+            
+            @Override
+            public void run() {
+                boolean isObstacleNearby = false;
+                for (int x = -1; x < 2; x++) {
+                    for (int y = -1; y < 2; y++) {
+                        isObstacleNearby |= !getInstance().getWorld().getObjectsAt(
+                            getInstance().getX() + x, 
+                            getInstance().getY() + y,
+                            Wand.class).isEmpty();
+                        
+                    }
+                }
+                if (!isObstacleNearby) 
+                    sendStatus("Robby ist in [" + getInstance().getX() + "," + getInstance().getY() + "] vom Weg abgekommen", false);
+                success &= isObstacleNearby;
+            }
+        }
+        
+        MovementCheck testRun = new MovementCheck();
+        
+        this.testMethod("hindernisUmrunden", null, new Class<?>[] { Runnable.class }, new Runnable[] { testRun });
+        this.world.removeObjects(this.world.getObjectsAt(1, 1, Wand.class)); 
+        this.world.removeObjects(this.world.getObjectsAt(2, 2, Wand.class)); 
+        this.world.removeObjects(this.world.getObjectsAt(1, 3, Wand.class)); 
+        this.world.removeObjects(this.world.getObjectsAt(3, 1, Wand.class)); 
+        
+        if (this.object.getX() != 0 || this.object.getY() != 1) {
+            this.sendStatus("Robby ist bei der Umrundung nicht wieder am Ausgangspunkt angekommen", false);
+            testRun.success = false;
+        }
+        
+        this.sendStatus("Hindernis umrunden", testRun.success);
+        return testRun.success;
+    }
+    
+    /**
+     * Testet, ob Robby Objekte aus seinem Speicher in die Welt platzieren kann und dabei Grenzen einhält. 
+     * @param method Methode, die ein Objekt ablegen soll
+     * @param field Feld, dass dabei vermindert wird
+     * @param min Minimalwert für den Speicher (danach kann kein Objekt mehr platziert werden)
+     * @param cl Klasse des zu platzierenden Objekts
+     * @see #testObjectAquisition
+     */
+    protected boolean testObjectDeposition(String method, String field, int min, Class<? extends Actor> cl) {
         this.object.setLocation(0, 0);
         int max = this.getField(field, Integer.class);
          for (int x = max; x > min - 1; x--) {
@@ -88,7 +153,15 @@ public class RobbyTest extends FeatureTest<Robby>
         return true;
     }
     
-    private boolean testObjectAquisition(String method, String field, int min, int max, int increment, Class<? extends Actor> cl) {
+    /**
+     * Testet, ob Robby Objekte aus der Welt in seinen Speicher laden kann und dabei Grenzen einhält. 
+     * @param method Methode, die ein Objekt aufnehmen soll
+     * @param field Feld, dass dabei erhöht wird
+     * @param max Maximalwert für den Speicher (danach kann kein Objekt mehr aufgenommen werden)
+     * @param cl Klasse des aufzunehmenden Objekts
+     * @see #testObjectDeposition
+     */
+    protected boolean testObjectAquisition(String method, String field, int max, Class<? extends Actor> cl) {
         this.object.setRotation(0);
 
         int startValue = this.getField(field, Integer.class);
@@ -102,8 +175,8 @@ public class RobbyTest extends FeatureTest<Robby>
             this.testMethod(method, null);
 
             int newValue = this.getField(field, Integer.class);
-            if (newValue < min || newValue > max) {
-                this.sendStatus("Feld " + field + " blieb nicht im Bereich [" + min + "," + max + "]", false);
+            if (newValue < 0 || newValue > max) {
+                this.sendStatus("Feld " + field + " blieb nicht im Bereich [ 0," + max + " ]", false);
                 return false;
             }
 
@@ -120,8 +193,15 @@ public class RobbyTest extends FeatureTest<Robby>
         
         return true;
     }
-
-    private boolean testRotationalObjectDetection(String title, String[] methods, Class<? extends Actor> cl) {
+    
+    /**
+     * Testet den Nachweis eines Objekts auf relativer Position zum Aktor. 
+     * @param title Bezeichnung für den Test
+     * @param methods String-Array aus Methodennamen für die einzelnen Positionen (vorne, links, rechts, hinten)
+     * @param cl Klasse des nachzuweisenden Aktors
+     * @see #testObjektDetection
+     */
+    protected boolean testRotationalObjectDetection(String title, String[] methods, Class<? extends Actor> cl) {
         if (methods.length < 4) {
             System.err.println("Fehlerhaftes Testskript (testRotationalObjectDetection): Benötigt 4 Methodennamen. ");
         }
@@ -176,7 +256,7 @@ public class RobbyTest extends FeatureTest<Robby>
      * @returns Erfolg des Tests
      * @see FeatureTest#testMethod
      */
-    private boolean testObjectDetection(int x, int y, String method, String test, Class<? extends Actor> cl)
+    protected boolean testObjectDetection(int x, int y, String method, String test, Class<? extends Actor> cl)
             throws InstantiationException, IllegalAccessException {
         // Sicherstellen, dass das Objekt nicht schon in der Spielwelt existiert
         this.world.removeObjects(this.world.getObjectsAt(x, y, cl));

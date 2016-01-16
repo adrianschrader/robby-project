@@ -9,16 +9,22 @@ import greenfoot.*; // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 public class Robby extends Roboter
 {
     /* Konstanten */
+    /** Maximale Anzahl an Akkus, die Robby tragen kann (Standard: 10) **/
     public static final int MAX_AKKUS      = 10;
+    /** Anzahl an Akkus, mit der Robby initialisiert werden soll (Standard: 0) **/
     public static final int INIT_AKKUS     =  0;
+    /** Anzahl an Schrauben, mit der Robby initialisiert werden soll (Standard: 10) **/
     public static final int INIT_SCHRAUBEN = 10;
 
     /* Globale Variablen */
+    /** Anzahl an Schrauben, die Robby trägt **/
     public int anzahlSchrauben;
+    /** Anzahl an Akkus, die Robby trägt **/
     public int anzahlAkkus;
 
     /**
-     * Konstruktor
+     * Der Konstruktor initialisiert die Speicherwerte für Robby aus den
+     * statischen Konstanten.
      */
     public Robby()
     {
@@ -31,32 +37,23 @@ public class Robby extends Roboter
      * Die Methoden werden dort nacheinander "aufgerufen", wenn man
      * nach dem Kompilieren / uebersetzen den Act-Knopf drueckt.
      */
+    @Override
     public void act()
     {
 
     }
 
     /**
-     * Bewegt Robby in die gewünschte, relative Richtung
-     * @param direction Relative Laufrichtung
-     */
-    public void bewegen(int direction) {
-        int newDirection = (this.getRotation() + direction) % 360;
-        if (newDirection != this.getRotation()) {
-            this.setRotation(newDirection);
-            Greenfoot.delay(1);
-        }
-        bewegen();
-    }
-
-    /**
      * Robby soll hiermit einen Akku aufnehmen und im Inventar speichern. Vor
      * der Akkuaufnahme wird auf dem Feld zunächst überprüft, ob sich hier ein
      * Akku befindet. Wenn dies der Fall ist, aber auch noch weniger als 10
-     * Akkus im Inventar sind, nimmt Robby einen Akku auf und fügt dem Inventar * einen hinzu und speichert dies. Hat er bereits die Maximalanzahl von 10
-     * Akkus im Inventar erreicht, meldet er dies und nimmt keinen weiteren Akku * auf. Wenn sich andernfalls auch kein Akku auf dem Feld befindet, meldet
+     * Akkus im Inventar sind, nimmt Robby einen Akku auf und fügt dem Inventar
+     * einen hinzu und speichert dies. Hat er bereits die Maximalanzahl von 10
+     * Akkus im Inventar erreicht, meldet er dies und nimmt keinen weiteren Akku
+     * auf. Wenn sich andernfalls auch kein Akku auf dem Feld befindet, meldet
      * er dies ebenfalls.
      */
+    @Override
     public void akkuAufnehmen() {
         Akku aktAkku = (Akku)this.getOneObjectAtOffset(0, 0, Akku.class);
         if(aktAkku != null) {
@@ -79,12 +76,11 @@ public class Robby extends Roboter
      * Schrauben im Inventar wird eine abgezogen und dies abgespeichert.
      * Andernfalls meldet Robby, dass er keine Schrauben mehr hat.
      */
+    @Override
     public void schraubeAblegen() {
         if(anzahlSchrauben > 0) {
-            this.getWorld().addObject(
-                new Schraube(),
-                this.getX(),
-                this.getY() );
+            this.getWorld().addObject(new Schraube(),
+                this.getX(), this.getY() );
 
             anzahlSchrauben--;
         }
@@ -92,7 +88,45 @@ public class Robby extends Roboter
             System.out.println("Ich besitze keine Schrauben mehr!");
     }
 
-    public void hindernisUmrunden2() {
+    /**
+     * Bewegt Robby um einen Schritt in die gewünschte, relative Richtung. 
+     * @param direction Relative Laufrichtung
+     * @see Roboter#bewegen
+     */
+    public void bewegen(int direction) {
+        int newDirection = (this.getRotation() + direction) % 360;
+        if (newDirection != this.getRotation()) {
+            this.setRotation(newDirection);
+            Greenfoot.delay(1);
+        }
+        this.bewegen();
+    }
+
+    /**
+     * Umrundet aus Wänden bestehende Hindernisse ohne den Kontakt zu diesem
+     * zu verliehren und bleibt am Ausgangspunkt stehen. Zu Beginn muss Robby
+     * auf eine Wand blicken. Wenn Robby auf die Weltgrenze trifft, behandelt
+     * er diese als Teil des Hindernisses.
+     * @see #hindernisUmrunden
+     */
+    public void hindernisUmrunden() {
+        hindernisUmrunden(new Runnable() {
+            @Override
+            public void run() {
+            }
+        });
+    }
+
+    /**
+     * Umrundet aus Wänden bestehende Hindernisse ohne den Kontakt zu diesem
+     * zu verliehren und bleibt am Ausgangspunkt stehen. Zu Beginn muss Robby
+     * auf eine Wand blicken. Wenn Robby auf die Weltgrenze trifft, behandelt
+     * er diese als Teil des Hindernisses.
+     * @param action Runnable-Aktion, die auf jedem Feld ausgeführt wird
+     * @see #istObjektNebendran
+     * @see #istGrenzeNebendran
+     */
+    public void hindernisUmrunden(Runnable action) {
         int startX = this.getX(),
             startY = this.getY();
 
@@ -102,6 +136,7 @@ public class Robby extends Roboter
             for (int direction = 450; direction > 90; direction -= 90) {
                 if ( !istObjektNebendran(direction, Wand.class)
                   && !istGrenzeNebendran(direction) ) {
+                    action.run();
                     bewegen(direction);
                     break;
                 }
@@ -200,7 +235,7 @@ public class Robby extends Roboter
      * @see #akkuHinten
      * @see #wandHinten
      */
-    public boolean istObjektNebendran(int direction, Class<?> cl)
+    protected boolean istObjektNebendran(int direction, Class<?> cl)
     {
        double angle = (this.getRotation() + direction) / 180.0 * Math.PI;
 
@@ -220,7 +255,7 @@ public class Robby extends Roboter
      * @see #grenzeLinks
      * @see #grenzeHinten
      */
-    public boolean istGrenzeNebendran(int direction) {
+    protected boolean istGrenzeNebendran(int direction) {
         direction = direction % 360;
         if (( this.getX() + 1 >= this.getWorld().getWidth()
                 && this.getRotation() == (360 - direction) % 360 )

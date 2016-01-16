@@ -20,6 +20,7 @@ public class FeatureTest<T> {
     /**
      * Instanziiert die Klasse über den Typ der Testklasse. Die zu testende
      * Klasseninstanz wird automatisch erstellt.
+     * @param cl Typ der Testklasse
      */
     public FeatureTest(Class<T> cl) {
         this.cl = cl;
@@ -36,7 +37,8 @@ public class FeatureTest<T> {
     }
 
     /**
-     * Instanziiert die Klasse über ein bestehendes Objekt.
+     * Instanziiert die Klasse über ein bestehendes Objekt. 
+     * @param obj Objekt vom zu testenden Typ
      */
     public FeatureTest(T obj) {
         this.cl = (Class<T>)obj.getClass();
@@ -63,8 +65,9 @@ public class FeatureTest<T> {
     /**
      * Diese Funktion sollte von Unterklassen überschrieben werden, um alle
      * Tests auszuführen und deren Ergebnisse zurückzugeben.
+     * @param welt Weltinstanz, in der die Tests ausgeführt werden sollen
      */
-    public boolean testAllFeatures(RoboterWelt welt) {
+    public boolean testAllFeatures() {
         return this.failed;
     }
 
@@ -78,6 +81,7 @@ public class FeatureTest<T> {
     /**
      * Gibt das reflexive Feld aus.
      * @param name Name des Fields
+     * @param type Typ des Feldes
      * @see testField
      */
     protected <F> F getField(String name, Class<F> type) {
@@ -122,7 +126,7 @@ public class FeatureTest<T> {
      */
     protected boolean testMethod(String name, Object returnValue)
     {
-        return this.testMethod(name, returnValue, new Object[] {});
+        return this.testMethod(name, returnValue, new Class<?>[]{}, new Object[] {});
     }
 
     /**
@@ -132,11 +136,7 @@ public class FeatureTest<T> {
      * @param returnValue Object, dass dem Rückgabewert entsprechen soll
      * @return Gibt an, ob die Methode den Test bestanden hat
      */
-    protected boolean testMethod(String name, Object expectedValue, Object[] parameters) {
-        Class<?>[] parameterTypes = new Class<?>[parameters.length];
-        for (int index = 0; index < parameters.length; index++) {
-            parameterTypes[index] = parameters[index].getClass();
-        }
+    protected boolean testMethod(String name, Object expectedValue, Class<?>[] parameterTypes, Object[] parameters) {
 
         try {
             Method method = this.cl.getMethod(name, parameterTypes);
