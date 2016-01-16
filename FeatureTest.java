@@ -37,7 +37,7 @@ public class FeatureTest<T> {
     }
 
     /**
-     * Instanziiert die Klasse über ein bestehendes Objekt. 
+     * Instanziiert die Klasse über ein bestehendes Objekt.
      * @param obj Objekt vom zu testenden Typ
      */
     public FeatureTest(T obj) {
@@ -132,8 +132,9 @@ public class FeatureTest<T> {
     /**
      * Überprüft, ob die reflektiv angegebene Methode den Zielwert zurückgibt.
      * @param name Name der Methode
+     * @param expectedValue Erwartungswert für den Rückgabewert
+     * @param parameterTypes Array der Typen der Parameter, mit denen die Methode gefunden werden kann
      * @param parameters Array der benötigten Parameter der gesuchten Methode
-     * @param returnValue Object, dass dem Rückgabewert entsprechen soll
      * @return Gibt an, ob die Methode den Test bestanden hat
      */
     protected boolean testMethod(String name, Object expectedValue, Class<?>[] parameterTypes, Object[] parameters) {
@@ -141,7 +142,7 @@ public class FeatureTest<T> {
         try {
             Method method = this.cl.getMethod(name, parameterTypes);
             Object returnValue = method.invoke(this.object, parameters);
-            
+
             if (expectedValue != null) {
                 if (!returnValue.equals(expectedValue))
                 {
@@ -158,6 +159,34 @@ public class FeatureTest<T> {
             failed = true;
 
             System.err.println("Fehlerhaftes Testskript (testMethod): Methode in " + cl.getName() + " konnte nicht geladen werden. ");
+            ex.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * Gibt einen Getter mit dem zugehörigen Namen zurück
+     * @param name Name der Methode
+     */
+    protected Object getReturnValue(String name) {
+        return getReturnValue(name, new Class<?>[] {}, new Object[] {});
+    }
+
+    /**
+     * Gibt den Rückgabewert der angegeben Methode zurück
+     * @param name Name der Methode
+     */
+    protected Object getReturnValue(String name, Class<?>[] parameterTypes, Object[] parameters) {
+         try {
+            Method method = this.cl.getMethod(name, parameterTypes);
+            return method.invoke(this.object, parameters);
+        }
+        catch (Exception ex)
+        {
+            this.sendStatus(name, false);
+            failed = true;
+
+            System.err.println("Fehlerhaftes Testskript (getReturnValue): Methode in " + cl.getName() + " konnte nicht geladen werden. ");
             ex.printStackTrace();
             return false;
         }

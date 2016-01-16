@@ -18,9 +18,9 @@ public class Robby extends Roboter
 
     /* Globale Variablen */
     /** Anzahl an Schrauben, die Robby trägt **/
-    public int anzahlSchrauben;
+    private int anzahlSchrauben;
     /** Anzahl an Akkus, die Robby trägt **/
-    public int anzahlAkkus;
+    private int anzahlAkkus;
 
     /**
      * Der Konstruktor initialisiert die Speicherwerte für Robby aus den
@@ -30,6 +30,17 @@ public class Robby extends Roboter
     {
         anzahlAkkus     = Robby.INIT_AKKUS;
         anzahlSchrauben = Robby.INIT_SCHRAUBEN;
+    }
+
+    /**
+     * Gibt die aktuelle Anzahl an Schrauben zurück.
+     */
+    public int getAnzahlSchrauben() {
+        return this.anzahlSchrauben;
+    }
+
+    public int getAnzahlAkkus() {
+        return this.anzahlAkkus;
     }
 
     /**
@@ -89,7 +100,7 @@ public class Robby extends Roboter
     }
 
     /**
-     * Bewegt Robby um einen Schritt in die gewünschte, relative Richtung. 
+     * Bewegt Robby um einen Schritt in die gewünschte, relative Richtung.
      * @param direction Relative Laufrichtung
      * @see Roboter#bewegen
      */

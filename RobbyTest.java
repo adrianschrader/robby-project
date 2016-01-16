@@ -70,10 +70,10 @@ public class RobbyTest extends FeatureTest<Robby>
         boolean success = true;
         System.out.println("Speicherfunktionalität wird getetstet...");
         
-        success &= testObjectAquisition("akkuAufnehmen", "anzahlAkkus", Robby.MAX_AKKUS, Akku.class);
+        success &= testObjectAquisition("akkuAufnehmen", "getAnzahlAkkus", Robby.MAX_AKKUS, Akku.class);
         this.sendStatus("Aufnahme und Begrenzung von Akkus", success);
         
-        success &= testObjectDeposition("schraubeAblegen", "anzahlSchrauben", 0, Schraube.class);
+        success &= testObjectDeposition("schraubeAblegen", "getAnzahlSchrauben", 0, Schraube.class);
         this.sendStatus("Ablage und Begrenzung von Schrauben", success);
 
         return success;
@@ -142,10 +142,10 @@ public class RobbyTest extends FeatureTest<Robby>
      */
     protected boolean testObjectDeposition(String method, String field, int min, Class<? extends Actor> cl) {
         this.object.setLocation(0, 0);
-        int max = this.getField(field, Integer.class);
+        int max = (Integer)this.getReturnValue(field);
          for (int x = max; x > min - 1; x--) {
             this.testMethod(method, null);
-            if (this.getField(field, Integer.class) < min) {
+            if ((Integer)this.getReturnValue(field) < min) {
                 return false;
             }
         }
@@ -156,7 +156,7 @@ public class RobbyTest extends FeatureTest<Robby>
     /**
      * Testet, ob Robby Objekte aus der Welt in seinen Speicher laden kann und dabei Grenzen einhält. 
      * @param method Methode, die ein Objekt aufnehmen soll
-     * @param field Feld, dass dabei erhöht wird
+     * @param field Getter für einen Integer, der den erhöhten Wert zurückgeben soll
      * @param max Maximalwert für den Speicher (danach kann kein Objekt mehr aufgenommen werden)
      * @param cl Klasse des aufzunehmenden Objekts
      * @see #testObjectDeposition
@@ -164,7 +164,7 @@ public class RobbyTest extends FeatureTest<Robby>
     protected boolean testObjectAquisition(String method, String field, int max, Class<? extends Actor> cl) {
         this.object.setRotation(0);
 
-        int startValue = this.getField(field, Integer.class);
+        int startValue = (Integer)this.getReturnValue(field);
 
         Akku[] akkus = new Akku[max + 1];
         for (int x = 0; x < max + 1; x++) {
@@ -174,7 +174,7 @@ public class RobbyTest extends FeatureTest<Robby>
 
             this.testMethod(method, null);
 
-            int newValue = this.getField(field, Integer.class);
+            int newValue = (Integer)this.getReturnValue(field);
             if (newValue < 0 || newValue > max) {
                 this.sendStatus("Feld " + field + " blieb nicht im Bereich [ 0," + max + " ]", false);
                 return false;
