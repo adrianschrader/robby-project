@@ -4,7 +4,7 @@ import java.lang.reflect.*;
 /**
  * Basisklasse zum Testen einzelner Klassen in Greenfoot. Benötigt den Klassentyp. Implementierungen sollten eigene Subklassen verwenden.
  * @author Adrian Schrader
- * @version 1.0.0
+ * @version 1.5
  */
 public class FeatureTest<T> {
     /* Statischer Text für Statusmeldungen */

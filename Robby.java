@@ -4,7 +4,7 @@ import greenfoot.*; // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  * Der Roboter Robby kann sich in der Welt orientieren, Hindernisse umrunden,
  * Schrauben hinterlassen und Akkus aufnehmen.
  * @author Adrian Schrader, Moritz Jung, Alexander Riecke
- * @version 1.4
+ * @version 1.5
  */
 public class Robby extends Roboter
 {
