@@ -1,14 +1,16 @@
-import java.util.*;
 import java.lang.reflect.*;
 
 /**
- * Basisklasse zum Testen einzelner Klassen in Greenfoot. Benötigt den Klassentyp. Implementierungen sollten eigene Subklassen verwenden.
+ * Basisklasse zum Testen einzelner Klassen in Greenfoot. Benötigt den 
+ * Klassentyp. Implementierungen sollten eigene Subklassen verwenden.
  * @author Adrian Schrader
  * @version 1.5
+ * @param <T> Typ der getesteten Klasse
  */
 public class FeatureTest<T> {
-    /* Statischer Text für Statusmeldungen */
+    /** Statusmeldung für bestandene Tests **/
     public static final String MESSAGE_PASSED = "  Bestanden  ";
+    /** Statusmeldung für nicht bestandene Tests **/
     public static final String MESSAGE_FAILED = "Durchgefallen";
 
     /* Attribute und zu testende Objektinstanz */
@@ -48,15 +50,14 @@ public class FeatureTest<T> {
     }
 
     /**
-     * Gibt die erstellte Testinstanz der zu testenden Klasse zurück.
+     * @return Ertellte Instanz der zu testenden Klasse
      */
     public T getInstance() {
         return this.object;
     }
 
     /**
-     * Gibt den Namen der Testklasse zurück, der auch in den Statusmeldungen
-     * benutzt wird.
+     * @return Name der Testklasse, der auch in den Statusmeldungen benutzt wird.
      */
     public String getName() {
         return this.name;
@@ -65,7 +66,7 @@ public class FeatureTest<T> {
     /**
      * Diese Funktion sollte von Unterklassen überschrieben werden, um alle
      * Tests auszuführen und deren Ergebnisse zurückzugeben.
-     * @param welt Weltinstanz, in der die Tests ausgeführt werden sollen
+     * @return Erfolg des Tests
      */
     public boolean testAllFeatures() {
         return this.failed;
@@ -73,15 +74,21 @@ public class FeatureTest<T> {
 
     /**
      * Gibt die Statusmeldungen für einzelne Tests aus
+     * @param message Nachricht für die Konsole/Log
+     * @param passed Erfolgreiche Meldung
+     * @see #MESSAGE_PASSED
+     * @see #MESSAGE_FAILED
      */
     protected void sendStatus(String message, boolean passed) {
-        System.out.println("[" + (passed ? this.MESSAGE_PASSED : this.MESSAGE_FAILED) + "] " + message);
+        System.out.println("[" + (passed ? FeatureTest.MESSAGE_PASSED : FeatureTest.MESSAGE_FAILED) + "] " + message);
     }
 
     /**
      * Gibt das reflexive Feld aus.
+     * @param <F> Typ des Feldes
      * @param name Name des Fields
      * @param type Typ des Feldes
+     * @return Aktueller gecasteter Wert des Feldes
      * @see testField
      */
     protected <F> F getField(String name, Class<F> type) {
@@ -133,12 +140,11 @@ public class FeatureTest<T> {
      * Überprüft, ob die reflektiv angegebene Methode den Zielwert zurückgibt.
      * @param name Name der Methode
      * @param expectedValue Erwartungswert für den Rückgabewert
-     * @param parameterTypes Array der Typen der Parameter, mit denen die Methode gefunden werden kann
+     * @param parameterTypes Array der Typen der Parameter, mit denen die Methode gefunden werden kann
      * @param parameters Array der benötigten Parameter der gesuchten Methode
      * @return Gibt an, ob die Methode den Test bestanden hat
      */
     protected boolean testMethod(String name, Object expectedValue, Class<?>[] parameterTypes, Object[] parameters) {
-
         try {
             Method method = this.cl.getMethod(name, parameterTypes);
             Object returnValue = method.invoke(this.object, parameters);
@@ -159,22 +165,25 @@ public class FeatureTest<T> {
             failed = true;
 
             System.err.println("Fehlerhaftes Testskript (testMethod): Methode in " + cl.getName() + " konnte nicht geladen werden. ");
-            ex.printStackTrace();
             return false;
         }
     }
 
     /**
-     * Gibt einen Getter mit dem zugehörigen Namen zurück
+     * Gibt den Wert eines Getters ohne Parameter mit dem zugehörigen Namen zurück
      * @param name Name der Methode
+     * @return Rückgabewert der Methode
      */
     protected Object getReturnValue(String name) {
         return getReturnValue(name, new Class<?>[] {}, new Object[] {});
     }
 
     /**
-     * Gibt den Rückgabewert der angegeben Methode zurück
+     * Führt die angegebene Methode reflexiv aus und gibt seinen Rückgabewert zurück
      * @param name Name der Methode
+     * @param parameterTypes Array der Typen der Parameter, mit denen die Methode gefunden werden kann
+     * @param parameters Array der benötigten Parameter der gesuchten Methode
+     * @return Rückgabewert der Methode
      */
     protected Object getReturnValue(String name, Class<?>[] parameterTypes, Object[] parameters) {
          try {
@@ -187,7 +196,6 @@ public class FeatureTest<T> {
             failed = true;
 
             System.err.println("Fehlerhaftes Testskript (getReturnValue): Methode in " + cl.getName() + " konnte nicht geladen werden. ");
-            ex.printStackTrace();
             return false;
         }
     }

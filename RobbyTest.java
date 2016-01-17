@@ -1,5 +1,4 @@
 import greenfoot.*; // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
-import java.util.*;
 
 /**
  * Diese Klasses testet die Funktionalität von Sensoren, Speicher und
@@ -9,10 +8,11 @@ import java.util.*;
  */
 public class RobbyTest extends FeatureTest<Robby>
 {
-    private RoboterWelt world;
+    private final RoboterWelt world;
 
     /**
-     * Instanziiert die Klasse in der angegeben Welt.
+     * Instanziiert die Testklasse und lässt neuen Robby erstellen
+     * @param world Spielwelt, in der die Tests durchgeführt werden sollen. 
      */
     public RobbyTest(RoboterWelt world)
     {
@@ -21,7 +21,8 @@ public class RobbyTest extends FeatureTest<Robby>
     }
 
     /**
-     * Gibt an, ob alle Funktionen von Robby einwandfrei funktionieren.
+     * Startet alle Tests für die Klasse Robby
+     * @return Erfolg der Tests
      */
     @Override
     public boolean testAllFeatures() {
@@ -36,13 +37,13 @@ public class RobbyTest extends FeatureTest<Robby>
             return success;
         } catch (Exception ex) {
             System.err.println("Innerhalb der Testroutine ist ein Fehler aufgetreten. Sind alle Funktionen aufrufbar?");
-            ex.printStackTrace();
             return false;
         }
     }
 
     /**
      * Testet Robbys Sensoren zum Aufspüren von Wänden und Akkus in einer Entfernung von einem Feld.
+     * @return Erfolg des Tests
      * @throws InstantiationException
      * @throws IllegalAccessException
      */
@@ -65,6 +66,7 @@ public class RobbyTest extends FeatureTest<Robby>
     /**
      * Testet Robbys Fähigkeit Schrauben abzulegen, Akkus aufzunehmen und
      * dabei seine Statusanzeigen zu aktualisieren.
+     * @return Erfolg des Tests
      */
     public boolean testMemory() {
         boolean success = true;
@@ -83,6 +85,7 @@ public class RobbyTest extends FeatureTest<Robby>
      * Testet Robbys Fähigkeit ein geschlossenes Hindernis zu Umrunden,
      * dabei anpassbare Aktionen auszuführen und zum Ausgangspunkt
      * zurückzukehren.
+     * @return Erfolg des Tests
      */
     public boolean testMovement() {
         System.out.println("Bewegungsfunktionalität wird getetstet...");
@@ -138,6 +141,7 @@ public class RobbyTest extends FeatureTest<Robby>
      * @param field Feld, dass dabei vermindert wird
      * @param min Minimalwert für den Speicher (danach kann kein Objekt mehr platziert werden)
      * @param cl Klasse des zu platzierenden Objekts
+     * @return Efolg des Tests
      * @see #testObjectAquisition
      */
     protected boolean testObjectDeposition(String method, String field, int min, Class<? extends Actor> cl) {
@@ -159,6 +163,7 @@ public class RobbyTest extends FeatureTest<Robby>
      * @param field Getter für einen Integer, der den erhöhten Wert zurückgeben soll
      * @param max Maximalwert für den Speicher (danach kann kein Objekt mehr aufgenommen werden)
      * @param cl Klasse des aufzunehmenden Objekts
+     * @return Erfolg des Tests
      * @see #testObjectDeposition
      */
     protected boolean testObjectAquisition(String method, String field, int max, Class<? extends Actor> cl) {
@@ -199,7 +204,8 @@ public class RobbyTest extends FeatureTest<Robby>
      * @param title Bezeichnung für den Test
      * @param methods String-Array aus Methodennamen für die einzelnen Positionen (vorne, links, rechts, hinten)
      * @param cl Klasse des nachzuweisenden Aktors
-     * @see #testObjektDetection
+     * @return Erfolg des Tests
+     * @see #testObjectDetection
      */
     protected boolean testRotationalObjectDetection(String title, String[] methods, Class<? extends Actor> cl) {
         if (methods.length < 4) {
@@ -252,8 +258,11 @@ public class RobbyTest extends FeatureTest<Robby>
      * @param x Horizontale Koordinate für das Objekt
      * @param y Vertikale Koordinate für das Objekt
      * @param method Name der Methode in der Klasse Robby
+     * @param test Name des durchgeführten Tests
      * @param cl Klasse des gesuchten Actors
-     * @returns Erfolg des Tests
+     * @return Erfolg des Tests
+     * @throws java.lang.InstantiationException
+     * @throws java.lang.IllegalAccessException
      * @see FeatureTest#testMethod
      */
     protected boolean testObjectDetection(int x, int y, String method, String test, Class<? extends Actor> cl)
