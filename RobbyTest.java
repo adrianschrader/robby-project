@@ -14,8 +14,7 @@ public class RobbyTest extends FeatureTest<Robby>
      * Instanziiert die Testklasse und lässt neuen Robby erstellen
      * @param world Spielwelt, in der die Tests durchgeführt werden sollen. 
      */
-    public RobbyTest(RoboterWelt world)
-    {
+    public RobbyTest(RoboterWelt world) {
         super(Robby.class);
         this.world = world;
     }
