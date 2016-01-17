@@ -51,7 +51,7 @@ public class FeatureTest<T> {
     }
 
     /**
-     * @return Instanz der zu testenden Klasse
+     * @return Ertellte Instanz der zu testenden Klasse
      */
     public T getInstance() {
         return this.object;
