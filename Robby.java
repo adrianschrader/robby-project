@@ -33,12 +33,15 @@ public class Robby extends Roboter
     }
 
     /**
-     * Gibt die aktuelle Anzahl an Schrauben zurück.
+     * @return Aktuelle Anzahl an Schrauben
      */
     public int getAnzahlSchrauben() {
         return this.anzahlSchrauben;
     }
-
+    
+    /**
+     * @return Aktuelle Anzahl an Akkus
+     */
     public int getAnzahlAkkus() {
         return this.anzahlAkkus;
     }
@@ -118,7 +121,7 @@ public class Robby extends Roboter
      * zu verliehren und bleibt am Ausgangspunkt stehen. Zu Beginn muss Robby
      * auf eine Wand blicken. Wenn Robby auf die Weltgrenze trifft, behandelt
      * er diese als Teil des Hindernisses.
-     * @see #hindernisUmrunden
+     * @see #hindernisUmrunden(Runnable)
      */
     public void hindernisUmrunden() {
         hindernisUmrunden(new Runnable() {
@@ -268,16 +271,14 @@ public class Robby extends Roboter
      */
     protected boolean istGrenzeNebendran(int direction) {
         direction = direction % 360;
-        if (( this.getX() + 1 >= this.getWorld().getWidth()
+        return ( this.getX() + 1 >= this.getWorld().getWidth()
                 && this.getRotation() == (360 - direction) % 360 )
-         || ( this.getY() + 1 >= this.getWorld().getHeight()
+                || ( this.getY() + 1 >= this.getWorld().getHeight()
                 && this.getRotation() == (450 - direction) % 360 )
-         || ( this.getX() <= 0
+                || ( this.getX() <= 0
                 && this.getRotation() == (540 - direction) % 360 )
-         || ( this.getY() <= 0
-                && this.getRotation() == (630 - direction) % 360 ))
-            return true;
-        return false;
+                || ( this.getY() <= 0
+                && this.getRotation() == (630 - direction) % 360 );
     }
 
 }
